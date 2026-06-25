@@ -1,0 +1,16 @@
+{
+  "name": "model-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lightweight two-end OpenAI-compatible bridge for private internal model APIs.",
+  "scripts": {
+    "internal:start": "node internal-bridge/server.mjs",
+    "external:start": "node external-client/server.mjs",
+    "smoke:local": "node scripts/smoke-local.mjs",
+    "simulate": "node scripts/simulate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
