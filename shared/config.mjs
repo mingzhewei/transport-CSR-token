@@ -95,24 +95,21 @@ export function validateBridgeToken(token, { logger } = {}) {
     return;
   }
 
-  if (token.length < 16) {
-    throw new Error(
-      "BRIDGE_TOKEN is too short (must be at least 16 characters, 32+ recommended). Generate one with: openssl rand -base64 32"
-    );
-  }
-
-  // Reject obvious weak / sequential tokens.
+  // BRIDGE_TOKEN 是 external-client 与 internal-bridge 之间的私有共享密钥，
+  // 整条链路运行在 Tailscale 私有网络内，不暴露公网。因此允许任意值，
+  // 仅在 token 较弱时给出一条提示，不阻断启动。
   const weakPatterns = [
-    /^\d{6,}$/,
+    /^\d{1,}$/,
     /^password$/i,
     /^12345678/,
     /^abcdefg/i,
     /^bridge-token/i
   ];
-  if (weakPatterns.some((pattern) => pattern.test(token))) {
-    throw new Error(
-      "BRIDGE_TOKEN looks too predictable. Generate a strong random token with: openssl rand -base64 32"
-    );
+  const looksWeak = token.length < 16 || weakPatterns.some((pattern) => pattern.test(token));
+  if (looksWeak && logger) {
+    logger.warn("bridge_token_weak", {
+      message: "BRIDGE_TOKEN is short or predictable. It still works, but if the Tailscale channel is ever exposed, use a stronger token (openssl rand -base64 32)."
+    });
   }
 }
 

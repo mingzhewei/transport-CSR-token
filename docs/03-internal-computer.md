@@ -39,7 +39,7 @@ LOG_FILE=./logs/internal-bridge.log
 openssl rand -base64 32
 ```
 
-程序启动时会校验 `BRIDGE_TOKEN`：长度不能小于 16，且不能是明显的弱口令（如纯数字、12345678、password 等）。
+程序启动时会读取 `BRIDGE_TOKEN`。它可以是任意值（包括简单口令如 `123456`），因为整个链路运行在 Tailscale 私有网络内。如果 token 为空，会给出提示但不阻止启动。
 
 `UPSTREAM_API_KEY` 只应该放在内部电脑，不要放到外部电脑。
 
