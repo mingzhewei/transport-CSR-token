@@ -1,4 +1,4 @@
-# start-external.ps1
+﻿# start-external.ps1
 # 外部电脑（Windows）一键启动 external-client，并做一次链路自检。
 # 用法（在项目根目录）：
 #   powershell -ExecutionPolicy Bypass -File .\scripts\windows\start-external.ps1

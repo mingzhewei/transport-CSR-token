@@ -1,4 +1,4 @@
-# start-internal.ps1
+﻿# start-internal.ps1
 # 内部电脑（Windows）一键启动：先启动 internal-bridge，验证健康，再开启 tailscale serve。
 # 用法（在项目根目录）：
 #   powershell -ExecutionPolicy Bypass -File .\scripts\windows\start-internal.ps1

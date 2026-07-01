@@ -1,4 +1,4 @@
-# stop-internal.ps1
+﻿# stop-internal.ps1
 # 内部电脑（Windows）停止：关闭 internal-bridge，并可选重置 tailscale serve。
 # 用法：
 #   powershell -ExecutionPolicy Bypass -File .\scripts\windows\stop-internal.ps1

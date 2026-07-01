@@ -1,4 +1,4 @@
-# stop-external.ps1
+﻿# stop-external.ps1
 # 外部电脑（Windows）停止 external-client。
 # 用法：
 #   powershell -ExecutionPolicy Bypass -File .\scripts\windows\stop-external.ps1
