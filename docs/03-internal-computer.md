@@ -26,7 +26,7 @@ cp .env.example .env
 UPSTREAM_BASE_URL=https://crs.acerobotics.com/openai
 UPSTREAM_API_KEY=这里填写真实公司APIKey
 BRIDGE_TOKEN=这里填写一个强随机桥接Token
-INTERNAL_LISTEN_ADDR=127.0.0.1:8787
+INTERNAL_LISTEN_ADDR=127.0.0.1:18787
 DEFAULT_MODEL=gpt-5.5
 MODEL_MAP=gpt-5.5=这里填写公司当前真实模型ID
 LOG_LEVEL=info
@@ -45,6 +45,8 @@ openssl rand -base64 32
 
 ## 3. 启动 internal-bridge
 
+内部电脑上启动顺序是固定的：**先启动 internal-bridge，再运行 tailscale serve**。因为 `tailscale serve` 只是把请求转发到 `127.0.0.1:18787`，如果这个端口上还没有程序在监听，外部访问会直接失败。
+
 ```bash
 npm run internal:start
 ```
@@ -58,8 +60,10 @@ npm run internal:start
 本机验证：
 
 ```bash
-curl http://127.0.0.1:8787/healthz
+curl.exe http://127.0.0.1:18787/healthz
 ```
+
+确认返回 `{"ok":true,...}` 后，再进行下一步的 `tailscale serve`（见第 6 节）。
 
 ## 4. 日志位置
 
@@ -117,7 +121,7 @@ LOG_FILE=./logs/internal-bridge.log
 确认 Tailscale 已登录，然后运行：
 
 ```bash
-tailscale serve --bg --https=443 http://127.0.0.1:8787
+tailscale serve --bg --https=443 http://127.0.0.1:18787
 ```
 
 之后在外部电脑上访问：

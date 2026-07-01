@@ -124,7 +124,7 @@ export function loadInternalConfig() {
     upstreamBaseURL: normalizeBaseURL(requiredEnv("UPSTREAM_BASE_URL"), "UPSTREAM_BASE_URL"),
     upstreamAPIKey: requiredEnv("UPSTREAM_API_KEY"),
     bridgeToken,
-    listenAddr: optionalEnv("INTERNAL_LISTEN_ADDR", "127.0.0.1:8787"),
+    listenAddr: optionalEnv("INTERNAL_LISTEN_ADDR", "127.0.0.1:18787"),
     defaultModel,
     models: parseModelsEnv([defaultModel]),
     modelMap: parseModelMapEnv(),

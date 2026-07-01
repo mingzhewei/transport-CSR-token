@@ -47,7 +47,7 @@ smoke:local ok
 ### 2. internal-bridge 本机健康检查
 
 ```bash
-curl http://127.0.0.1:8787/healthz
+curl http://127.0.0.1:18787/healthz
 ```
 
 ### 3. 外部电脑能访问内部电脑的 Tailscale 地址
@@ -65,13 +65,13 @@ curl https://你的内部电脑Tailscale名称/healthz
 ### 4. external-client 本机健康检查
 
 ```bash
-curl http://127.0.0.1:8788/healthz
+curl http://127.0.0.1:18788/healthz
 ```
 
 ### 5. 外部电脑完整请求
 
 ```bash
-curl http://127.0.0.1:8788/openai/responses \
+curl http://127.0.0.1:18788/openai/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer local-anything" \
   -d '{"model":"gpt-5.5","input":"只回复 OK"}'
@@ -138,22 +138,28 @@ cd /Users/weimingzhe/Documents/转接器
 npm run internal:start
 ```
 
-### listen EADDRINUSE: address already in use 127.0.0.1:8787
+### listen EADDRINUSE: address already in use 127.0.0.1:18787
 
-这个错误表示 8787 端口已经被别的程序占用。
+这个错误表示 18787 端口已经被别的程序占用（常见原因是之前启动的 internal-bridge 没关掉，或旧的 `crs-bridge` 占用了端口）。
 
-查看是谁占用：
+查看是谁占用（macOS / Linux）：
 
 ```bash
-lsof -nP -iTCP:8787 -sTCP:LISTEN
+lsof -nP -iTCP:18787 -sTCP:LISTEN
 ```
 
-这台机器上之前的 `crs-bridge` 可能已经占用了 `127.0.0.1:8787`。如果你需要保留旧服务，可以把本项目改用备用端口 `127.0.0.1:18787`。
+Windows（PowerShell）：
 
-备用端口配置：
+```powershell
+netstat -ano | findstr 18787
+# 拿到最后一列的 PID 后：
+taskkill /PID <PID> /F
+```
+
+如果你需要保留占用端口的旧服务，也可以把本项目改用其他端口：
 
 ```bash
-INTERNAL_LISTEN_ADDR=127.0.0.1:18787
+INTERNAL_LISTEN_ADDR=127.0.0.1:19787
 ```
 
 然后重新启动：
@@ -172,7 +178,7 @@ npm run internal:start
 
 ### Codex 不能用
 
-先不要从 Codex 排查，先用 curl 验证 `http://127.0.0.1:8788/openai/responses`。curl 能通之后，再回到 Codex 配置。
+先不要从 Codex 排查，先用 curl 验证 `http://127.0.0.1:18788/openai/responses`。curl 能通之后，再回到 Codex 配置。
 
 ### 流式输出不流动
 

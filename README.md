@@ -9,7 +9,7 @@
 
 ```text
 Codex / VSCode / OpenAI SDK
-  -> http://127.0.0.1:8788/openai
+  -> http://127.0.0.1:18788/openai
   -> external-client
   -> Tailscale 私有通道
   -> internal-bridge
@@ -48,4 +48,5 @@ SIMULATE_ONCE=1 npm run simulate   # 跑完自动验证即退出
 - [外部电脑配置](docs/04-external-computer.md)
 - [Codex / OpenAI 兼容配置](docs/05-openai-compatible-config.md)
 - [验证和排错](docs/06-verification.md)
+- [一键启动脚本](docs/09-scripts.md)
 - [可选：安装 Go](docs/07-install-go-optional.md)

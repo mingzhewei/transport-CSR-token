@@ -33,9 +33,27 @@
 
 内部电脑
   - 安装 Tailscale
-  - 运行 internal-bridge，监听 127.0.0.1:8787
-  - 运行 tailscale serve，把 127.0.0.1:8787 分享给外部电脑
+  - 运行 internal-bridge，监听 127.0.0.1:18787
+  - 运行 tailscale serve，把 127.0.0.1:18787 分享给外部电脑
 ```
+
+## 启动顺序（重要）
+
+内部电脑上**必须先启动 internal-bridge，再运行 tailscale serve**：
+
+```text
+第 1 步：npm run internal:start      ← 让 127.0.0.1:18787 开始监听
+第 2 步：tailscale serve ...          ← 把已在监听的端口分享出去
+```
+
+原因：`tailscale serve` 本质是一个反向代理，它只负责把 tailnet 的请求转发到 `127.0.0.1:18787`。如果这个端口上还没有程序在监听（即没先启动 internal-bridge），外部电脑访问时只会收到连接错误（502 / connection refused）。
+
+反过来的影响：
+
+- 顺序反了（先 serve 后启动服务）：serve 配置能建立，但在 internal-bridge 起来之前，外部访问都会失败。等 internal-bridge 起来后会自动恢复正常，不需要重开 serve。
+- internal-bridge 中途停了：serve 配置还在，但外部访问会失败，直到 internal-bridge 重新启动。
+
+所以正式运行时，建议把 internal-bridge 配成后台常驻（PM2 / NSSM），保证它一直在监听，serve 只需配一次。
 
 ## macOS 安装 Tailscale
 
@@ -126,7 +144,7 @@ tailscale status
 - Tailscale 客户端是否显示 Connected。
 - 是否在 Tailscale 管理后台看到了两台 Machines。
 
-## 内部电脑启动 internal-bridge
+## 内部电脑启动 internal-bridge（第 1 步）
 
 先在内部电脑启动项目的内部桥接程序：
 
@@ -134,24 +152,26 @@ tailscale status
 npm run internal:start
 ```
 
-本机验证：
+本机验证（Windows 用 curl.exe）：
 
 ```bash
-curl http://127.0.0.1:8787/healthz
+curl.exe http://127.0.0.1:18787/healthz
 ```
 
 成功时会返回类似（字段以实际输出为准）：
 
 ```json
-{"ok":true,"service":"internal-bridge","default_model":"gpt-5.5","upstream_base_url":"https://crs.acerobotics.com/openai"}
+{"ok":true,"service":"internal-bridge","default_model":"gpt-5.5","model_map_enabled":false}
 ```
 
-## 内部电脑开启 Tailscale Serve
+看到这个响应，说明 `127.0.0.1:18787` 已经在监听，可以进行下一步。
 
-确认 `internal-bridge` 已经在 `127.0.0.1:8787` 运行后，在内部电脑执行：
+## 内部电脑开启 Tailscale Serve（第 2 步）
+
+确认上一步 `internal-bridge` 已经在 `127.0.0.1:18787` 运行后，在内部电脑执行：
 
 ```bash
-tailscale serve --bg --https=443 http://127.0.0.1:8787
+tailscale serve --bg --https=443 http://127.0.0.1:18787
 ```
 
 含义：
@@ -159,7 +179,7 @@ tailscale serve --bg --https=443 http://127.0.0.1:8787
 - `serve`：把本机服务分享给同一个 tailnet 内的设备。
 - `--bg`：后台持久运行。官方 CLI 文档说明带 `--bg` 时，设备重启或 Tailscale 重启后会自动恢复分享。
 - `--https=443`：使用 Tailscale 提供的 HTTPS 地址。
-- `http://127.0.0.1:8787`：实际被分享的本机 internal-bridge 地址。
+- `http://127.0.0.1:18787`：实际被分享的本机 internal-bridge 地址。
 
 查看 Serve 状态：
 
@@ -218,8 +238,8 @@ npm run external:start
 再验证外部本机接口：
 
 ```bash
-curl http://127.0.0.1:8788/healthz
-curl http://127.0.0.1:8788/openai/models
+curl.exe http://127.0.0.1:18788/healthz
+curl.exe http://127.0.0.1:18788/openai/models
 ```
 
 ## 常见错误
@@ -247,7 +267,7 @@ Windows 可以试：
 1. 内部电脑本机是否能访问：
 
    ```bash
-   curl http://127.0.0.1:8787/healthz
+   curl.exe http://127.0.0.1:18787/healthz
    ```
 
 2. 内部电脑 `tailscale serve status` 是否有配置。
@@ -265,7 +285,7 @@ tailscale serve reset
 然后重新执行：
 
 ```bash
-tailscale serve --bg --https=443 http://127.0.0.1:8787
+tailscale serve --bg --https=443 http://127.0.0.1:18787
 ```
 
 ### 担心它暴露到公网

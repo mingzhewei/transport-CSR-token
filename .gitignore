@@ -5,6 +5,10 @@
 logs/
 *.log
 
+# 运行时 PID 文件（由启动脚本生成）
+*.pid
+run/
+
 # Node
 node_modules/
 npm-debug.log*

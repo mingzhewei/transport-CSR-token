@@ -133,7 +133,7 @@ export function loadExternalConfig() {
     remoteBaseURL: normalizeBaseURL(requiredEnv("REMOTE_BASE_URL"), "REMOTE_BASE_URL"),
     bridgeToken,
     externalAPIKey,
-    listenAddr: optionalEnv("EXTERNAL_LISTEN_ADDR", "127.0.0.1:8788"),
+    listenAddr: optionalEnv("EXTERNAL_LISTEN_ADDR", "127.0.0.1:18788"),
     requestBodyLimitBytes: parseIntegerEnv("REQUEST_BODY_LIMIT_BYTES", 25 * 1024 * 1024),
     upstreamTimeoutMs: parseIntegerEnv("UPSTREAM_TIMEOUT_MS", 120_000),
     rateLimitRpm: parseIntegerEnv("RATE_LIMIT_RPM", 60),

@@ -13,7 +13,7 @@ preferred_auth_method = "apikey"
 
 [model_providers.crs]
 name = "crs"
-base_url = "http://127.0.0.1:8788/openai"
+base_url = "http://127.0.0.1:18788/openai"
 wire_api = "responses"
 requires_openai_auth = true
 KEY = "local-anything"
@@ -28,7 +28,7 @@ KEY = "local-anything"
 只要客户端允许设置 `baseURL`，就设置为：
 
 ```text
-http://127.0.0.1:8788/openai
+http://127.0.0.1:18788/openai
 ```
 
 模型名使用：

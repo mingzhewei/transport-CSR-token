@@ -23,7 +23,7 @@ cp .env.example .env
 ```bash
 REMOTE_BASE_URL=https://你的内部电脑Tailscale名称/openai
 BRIDGE_TOKEN=和内部电脑一致的桥接Token
-EXTERNAL_LISTEN_ADDR=127.0.0.1:8788
+EXTERNAL_LISTEN_ADDR=127.0.0.1:18788
 EXTERNAL_API_KEY=你的本地APIKey
 LOG_LEVEL=info
 LOG_FILE=./logs/external-client.log
@@ -68,19 +68,19 @@ LOG_FILE=./logs/external-client.log
 ## 6. 验证本机接口
 
 ```bash
-curl http://127.0.0.1:8788/healthz
+curl http://127.0.0.1:18788/healthz
 ```
 
 验证模型列表：
 
 ```bash
-curl http://127.0.0.1:8788/openai/models
+curl http://127.0.0.1:18788/openai/models
 ```
 
 验证 Responses API：
 
 ```bash
-curl http://127.0.0.1:8788/openai/responses \
+curl http://127.0.0.1:18788/openai/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $EXTERNAL_API_KEY" \
   -d '{"model":"gpt-5.5","input":"只回复 OK"}'
@@ -94,7 +94,7 @@ curl http://127.0.0.1:8788/openai/responses \
 
 ```bash
 # 自测整条链路：自己 -> internal-bridge /healthz -> internal-bridge /openai/models
-curl http://127.0.0.1:8788/debug/probe \
+curl http://127.0.0.1:18788/debug/probe \
   -H "Authorization: Bearer $EXTERNAL_API_KEY"
 ```
 
@@ -102,7 +102,7 @@ curl http://127.0.0.1:8788/debug/probe \
 
 ```bash
 # 查看最近的错误记录（环形缓冲，最近 50 条）
-curl http://127.0.0.1:8788/debug/recent-errors \
+curl http://127.0.0.1:18788/debug/recent-errors \
   -H "Authorization: Bearer $EXTERNAL_API_KEY"
 ```
 

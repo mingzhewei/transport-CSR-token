@@ -6,7 +6,7 @@
 
 ```text
 外部软件
-  -> http://127.0.0.1:8788/openai
+  -> http://127.0.0.1:18788/openai
   -> external-client
   -> Tailscale
   -> internal-bridge
@@ -29,7 +29,7 @@
 
 运行在外部电脑上，职责是：
 
-- 在本机监听 `127.0.0.1:8788`。
+- 在本机监听 `127.0.0.1:18788`。
 - 对 Codex、VSCode、OpenAI SDK 看起来像普通 OpenAI 兼容服务。
 - 把请求通过 Tailscale 转给内部电脑。
 - 把内部电脑返回的内容继续返回给外部软件。
