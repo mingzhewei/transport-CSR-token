@@ -1,5 +1,25 @@
 # 验证和排错
 
+## Windows 用户注意
+
+Windows PowerShell 中 `curl` 是 `Invoke-WebRequest` 的别名，行为和 Linux/macOS 的 curl 不同。推荐使用以下方式之一：
+
+### 方式 1：使用 curl.exe（Windows 10+ 自带）
+
+```powershell
+curl.exe http://127.0.0.1:18787/healthz
+```
+
+### 方式 2：使用 Invoke-RestMethod（PowerShell 原生，输出更简洁）
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:18787/healthz
+```
+
+### 方式 3：安装 Git Bash，使用真正的 curl
+
+后文所有 `curl` 命令，Windows 用户请自行替换为 `curl.exe` 或 `Invoke-RestMethod`。
+
 ## 本地 mock 验证
 
 这个命令会在本机启动 mock upstream、internal-bridge、external-client，验证完整转发链路：
